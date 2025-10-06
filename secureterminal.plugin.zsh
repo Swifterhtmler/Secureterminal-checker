@@ -26,7 +26,7 @@ modelList() {
   }
 
 
- while getopts "lm:hu" opt; do
+ while getopts "lm:hue" opt; do
     case $opt in
       l) 
         modelList
