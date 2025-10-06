@@ -55,6 +55,14 @@ lists all models
 
 This removes all instances of username from the input and prints the output without username, replacing them with generic place holder.
 
+
+
+```bash
+  comch -e "ls -a"
+````
+
+Gives the user the explanation on why the risk level is LOW,MEDIUM,HIGH and what is behind that ranking.
+
 ## Installation
 
 Install the project by
