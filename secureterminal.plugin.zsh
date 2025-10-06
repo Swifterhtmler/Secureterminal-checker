@@ -54,6 +54,13 @@ modelList() {
         u=true
         showdanger=false
         ;;
+      e)
+        showdanger=false
+        local commandinput="${@:$OPTIND}"
+        local newout=$(ollama run "${model}" "Security assessment: How dangerous is this command to system integrity? Respond with: LOW/MEDIUM/HIGH. If you do not know it or the input looks weird answer UNKOWN. Explain why this command is dangerous in about 100-200 characters Command: $commandinput")
+        echo "${newout}"
+        return 1
+        ;;
       \?)
         echo "Invalid option: -$OPTARG" >&2
         return 1
