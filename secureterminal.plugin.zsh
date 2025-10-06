@@ -56,7 +56,8 @@ modelList() {
         ;;
       e)
         showdanger=false
-        local commandinput="${@:[2,-1]}" # this removes the first 2 characters from the input so -e does not get inclued using array slicing
+        local commandinput="${*}" #
+        commandinput="${commandinput:2}" # this removes the first 2 characters from the input so -e does not get inclued
         local newout=$(ollama run "${model}" "Security assessment: How dangerous is this command to system integrity? Respond with: LOW/MEDIUM/HIGH. If you do not know it or the input looks weird answer UNKOWN. Explain why this command is dangerous in about 100-200 characters Command: $commandinput")
         echo "${newout}"
         return 1
