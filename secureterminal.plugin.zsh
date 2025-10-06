@@ -30,6 +30,7 @@ modelList() {
     case $opt in
       l) 
         modelList
+        return 0
         ;;
       m)
         if validateModel "$OPTARG"; then
