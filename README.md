@@ -34,10 +34,26 @@ or any command you want:
 
 ```bash
 comch <your_command>
-```
+````
 
 and it gives you the grade on how dangerous the command is on HIGH,MEDIUM or LOW scale.
 
+```bash
+comch -m llama3.2 ls
+````
+Uses specific model
+
+```bash
+ comch -l
+````
+
+lists all models
+
+```bash
+ comch -u "<text-containing-user-name>"
+````
+
+This removes all instances of username from the input and prints the output without username, replacing them with generic place holder.
 
 ## Installation
 

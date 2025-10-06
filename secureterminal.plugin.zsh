@@ -1,23 +1,65 @@
 comch() {
 
 OPTIND=1
-
+local model="llama3.2"
+local models=("llama3.2" "gemma3" "deepseek-r1" "qwen3" "mistral" "phi3" "qwen3-coder")
 local u=false
-OPTSTRING=":u"
 local showdanger=true
+# OPTSTRING=":u"
 
-while getopts ${OPTSTRING} opt; do
-  case ${opt} in
-    u)
-       u=true
-       showdanger=false # does not show danger level when u option is used 
-      ;;
-    ?)
-      echo "Invalid option: -${OPTARG}."
-      exit 1
-      ;;
-  esac
-done
+modelList() {
+  echo "Available models"
+  for model_name in "${models[@]}"; do
+        echo "  - $model_name"
+    done
+    exit 0
+}
+
+ validateModel() {
+    local selected="$1"
+    for valid_model in "${models[@]}"; do
+      if [[ "$valid_model" == "$selected" ]]; then
+        return 0
+      fi
+    done
+    return 1
+  }
+
+
+ while getopts "lm:hu" opt; do
+    case $opt in
+      l) 
+        modelList
+        ;;
+      m)
+        if validateModel "$OPTARG"; then
+          model="$OPTARG"
+        else
+          echo "Error: Invalid model '$OPTARG'"
+          echo "Use -l to list available models"
+          return 1
+        fi
+        ;;
+      h)
+        echo "Usage: comch [OPTIONS] <command>"
+        echo "Options:"
+        echo "  -l           List available models"
+        echo "  -m MODEL     Specify model to use (default: llama3.2)"
+        echo "  -u           Hide username and danger level"
+        echo "  -h           Show this help"
+        return 0
+        ;;
+      u)
+        u=true
+        showdanger=false
+        ;;
+      \?)
+        echo "Invalid option: -$OPTARG" >&2
+        return 1
+        ;;
+    esac
+  done
+
 
 shift $((OPTIND-1))
 
@@ -29,12 +71,12 @@ local newstring="${command//$computeruser/my-user-name}"
 
     if [[  "$command" == *"$computeruser"* && "$u" == true ]]; 
       then
-        printf "$newstring"
+        printf "$newstring\n"
    fi  
    
 
 
-local output=$(ollama run llama3.2 "Security assessment: How dangerous is this command to system integrity? Respond with only: LOW/MEDIUM/HIGH. If you do not know it or the input looks weird answer UNKOWN Command: $command")
+local output=$(ollama run "${model}" "Security assessment: How dangerous is this command to system integrity? Respond with only: LOW/MEDIUM/HIGH. If you do not know it or the input looks weird answer UNKOWN Command: $command")
 
 
 # local output=$(send_input)
@@ -55,9 +97,8 @@ elif [[ "$output" == "MEDIUM" ]]
 then
    printf "${YELLOW}MEDIUM${NC}\n"   
 else
-   printf "UNKNOWN COMMAND"       
+   printf "UNKNOWN COMMAND\n"       
 fi
 fi
 }
-
 
