@@ -12,7 +12,7 @@ modelList() {
   for model_name in "${models[@]}"; do
         echo "  - $model_name"
     done
-    exit 0
+    return 0
 }
 
  validateModel() {
